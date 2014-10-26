@@ -4,7 +4,6 @@
   "description": "Syntax sugar for creating virtual DOM nodes",
   "keywords": ["virtual-dom","create"],
   "dependencies": {
-    "merge": "yields/merge",
     "type": "jkroso/type"
   },
   "devDependencies": {

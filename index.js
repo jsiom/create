@@ -1,6 +1,5 @@
 var Text = require('./text')
 var Node = require('./node')
-var merge = require('merge')
 var type = require('type')
 var call = Function.call
 
@@ -19,9 +18,20 @@ function toVDOM(tree){
   var tagName = head[0]
   var props = head[1]
   var children = tree.slice(1)
-  if (type(children[0]) == 'object') merge(props, children.shift())
+  if (type(children[0]) == 'object') {
+    var properties = children.shift()
+    for (var key in properties) {
+      var isevent = /^on([A-Z][a-z]+$)/.exec(key)
+      if (isevent) {
+        var events = events || {}
+        events[isevent[1].toLowerCase()] = properties[key]
+      } else {
+        props[key] = properties[key]
+      }
+    }
+  }
   var children = children.reduce(handleChild, [])
-  return new Node(tagName, props, children)
+  return new Node(tagName, props, children, events)
 }
 
 function handleChild(arr, child){
