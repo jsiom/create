@@ -4,6 +4,7 @@
   "description": "Syntax sugar for creating virtual DOM nodes",
   "keywords": ["virtual-dom","create"],
   "dependencies": {
+    "thunk-node": "jsiom/thunk-node",
     "type": "jkroso/type"
   },
   "devDependencies": {
@@ -11,8 +12,8 @@
     "serve": "jkroso/serve",
     "jsmd": "*"
   },
-  "repository": "git://github.com/jkroso/create.git",
+  "repository": "git://github.com/jsiom/create.git",
   "author": "Jake Rosoman",
-  "files": ["index.js"],
+  "files": ["index.js", "text.js", "node.js"],
   "license": "MIT"
 }

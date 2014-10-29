@@ -29,7 +29,7 @@ create('a text node') // => new Text('a text node')
 
 ```js
 create(['p']) // => new Node('p')
-create([function(){ return ['p'] }]) // => new Node('p')
+create([function(){ return ['p'] }]).type // => 'Thunk'
 ```
 
 The second item in the `tree` can optionally be an `Object`. In which case it will be merged with the properties of the returned virtual DOM node:

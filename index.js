@@ -1,3 +1,4 @@
+var ThunkNode = require('thunk-node')
 var Text = require('./text')
 var Node = require('./node')
 var type = require('type')
@@ -11,33 +12,57 @@ var call = Function.call
  */
 
 function toVDOM(tree){
-  if (typeof tree == 'string') return new Text(tree)
-  var head = tree[0]
-  if (typeof head == 'function') return toVDOM(call.apply(head, tree))
-  var head = parseTag(head)
-  var tagName = head[0]
-  var props = head[1]
-  var children = tree.slice(1)
-  if (type(children[0]) == 'object') {
-    var properties = children.shift()
-    for (var key in properties) {
-      var isevent = /^on([A-Z][a-z]+$)/.exec(key)
-      if (isevent) {
-        var events = events || {}
-        events[isevent[1].toLowerCase()] = properties[key]
-      } else {
-        props[key] = properties[key]
+  switch (type(tree)) {
+  case 'string': return new Text(tree)
+  case 'object': return tree
+  case 'array':
+    if (typeof tree[0] == 'function') return new Thunk(tree)
+    var head = parseTag(tree[0])
+    var tagName = head[0]
+    var props = head[1]
+    var children = tree.slice(1)
+    if (type(children[0]) == 'object') {
+      var properties = children.shift()
+      for (var key in properties) {
+        var isevent = /^on([A-Z][a-z]+$)/.exec(key)
+        if (isevent) {
+          var events = events || {}
+          events[isevent[1].toLowerCase()] = properties[key]
+        } else {
+          props[key] = properties[key]
+        }
       }
     }
+    var children = children.reduce(handleChild, [])
+    return new Node(tagName, props, children, events)
+  default: throw new Error('can\'t create virtual dom from "' + type(tree) + '"')
   }
-  var children = children.reduce(handleChild, [])
-  return new Node(tagName, props, children, events)
 }
 
 function handleChild(arr, child){
   if (type(child[0]) == 'array') return child.reduce(handleChild, arr)
-  arr.push(toVDOM(child))
+  child.length && arr.push(toVDOM(child))
   return arr
+}
+
+/**
+ * A specialized Thunk which provides an implicit `toVDOM` while
+ * preserving equality between Thunk instances
+ *
+ * @param {Array} tree
+ */
+
+function Thunk(tree) {
+  this.arguments = tree.slice(1)
+  this.fn = tree[0]
+  this.cache = null
+}
+
+Thunk.prototype = Object.create(ThunkNode.prototype)
+Thunk.prototype.constructor = Thunk
+
+Thunk.prototype.render = function() {
+  return toVDOM(this.fn.apply(this, this.arguments))
 }
 
 /**
