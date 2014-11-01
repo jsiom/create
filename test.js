@@ -6,8 +6,8 @@ var create = require('./')
 function app(data){
   return ['.app',
     ['h1#header', {onClick: console.log}, 'Todos'],
-    ['ul#list', data.list.map(function(item){
-      return ['li.item', item]
+    ['ul#list', data.list.map(function(item, i){
+      return ['li.item', {class: {selected: i == 1}}, item]
     })],
     ['#footer',
       ['p', 'Written by: ', data.author]]]
@@ -22,7 +22,7 @@ assert.equal(vdom, new Node('div', {className: 'app'}, [
   new Node('h1', {id: 'header'}, [new Text('Todos')], {click: console.log}),
   new Node('ul', {id: 'list'}, [
     new Node('li', {className: 'item'}, [new Text('one')]),
-    new Node('li', {className: 'item'}, [new Text('two')]),
+    new Node('li', {className: 'item selected'}, [new Text('two')]),
     new Node('li', {className: 'item'}, [new Text('three')])
   ]),
   new Node('div', {id: 'footer'}, [

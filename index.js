@@ -24,10 +24,17 @@ function toVDOM(tree){
     if (type(children[0]) == 'object') {
       var properties = children.shift()
       for (var key in properties) {
+        var value = properties[key]
         var isevent = /^on([A-Z][a-z]+$)/.exec(key)
         if (isevent) {
           var events = events || {}
-          events[isevent[1].toLowerCase()] = properties[key]
+          events[isevent[1].toLowerCase()] = value
+        } else if (key == 'class') {
+          for (key in value) if (value[key]) {
+            props.className = props.className
+              ? props.className + ' ' + key
+              : key
+          }
         } else {
           props[key] = properties[key]
         }
