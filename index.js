@@ -2,7 +2,6 @@ var ThunkNode = require('thunk-node')
 var Text = require('./text')
 var Node = require('./node')
 var type = require('type')
-var call = Function.call
 
 /**
  * Convert a lispy array tree to virtual DOM nodes
