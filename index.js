@@ -45,9 +45,23 @@ function toVDOM(tree){
   }
 }
 
+/**
+ * Add the rendered form of child to an array
+ *
+ * @param {Array} arr
+ * @param {Any} child
+ * @return {Array}
+ */
+
 function handleChild(arr, child){
-  if (type(child[0]) == 'array') return child.reduce(handleChild, arr)
-  child.length && arr.push(toVDOM(child))
+  switch (type(child)) {
+  case 'array':
+    if (!child.length) break
+    if (type(child[0]) == 'array') return child.reduce(handleChild, arr)
+  case 'string':
+  case 'object':
+    arr.push(toVDOM(child))
+  }
   return arr
 }
 

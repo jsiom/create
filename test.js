@@ -10,7 +10,7 @@ function app(data){
       return ['li.item', {class: {selected: i == 1}}, item]
     })],
     ['#footer',
-      ['p', 'Written by: ', data.author]]]
+      ['p', 'Written by: ', new Text(data.author), null, undefined]]]
 }
 
 var vdom = create(app({
