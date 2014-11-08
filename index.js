@@ -102,9 +102,9 @@ function parseTag(tag) {
     switch (part.charAt(0)) {
       case '.':
         if (props.className) {
-          props.className += ' ' + part.substr(1)
+          props.className += ' ' + part.substring(1)
         } else {
-          props.className = part.substr(1)
+          props.className = part.substring(1)
         }
         break
       case '#':
