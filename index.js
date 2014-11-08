@@ -16,6 +16,7 @@ function toVDOM(tree){
   case 'object': return tree
   case 'array':
     if (typeof tree[0] == 'function') return new Thunk(tree)
+    if (typeof tree[0] != 'string') return tree.map(toVDOM)
     var head = parseTag(tree[0])
     var tagName = head[0]
     var props = head[1]
@@ -38,30 +39,15 @@ function toVDOM(tree){
         }
       }
     }
-    var children = children.reduce(handleChild, [])
+    var children = children.reduce(addChild, [])
     return new Node(tagName, props, children, events)
   default: throw new Error('can\'t create virtual dom from "' + type(tree) + '"')
   }
 }
 
-/**
- * Add the rendered form of child to an array
- *
- * @param {Array} arr
- * @param {Any} child
- * @return {Array}
- */
-
-function handleChild(arr, child){
-  switch (type(child)) {
-  case 'array':
-    if (!child.length) break
-    if (type(child[0]) == 'array') return child.reduce(handleChild, arr)
-  case 'string':
-  case 'object':
-    arr.push(toVDOM(child))
-  }
-  return arr
+function addChild(array, child){
+  if (child == null) return array
+  return array.concat(toVDOM(child))
 }
 
 /**
