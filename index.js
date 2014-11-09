@@ -16,7 +16,7 @@ function toVDOM(tree){
   case 'object': return tree
   case 'array':
     if (typeof tree[0] == 'function') return new Thunk(tree)
-    if (typeof tree[0] != 'string') return tree.map(toVDOM)
+    if (typeof tree[0] != 'string') return tree.reduce(addChild, [])
     var head = parseTag(tree[0])
     var tagName = head[0]
     var props = head[1]
