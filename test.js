@@ -29,3 +29,12 @@ assert.equal(vdom, new Node('div', {className: 'app'}, [
     new Node('p', {}, [new Text('Written by: '), new Text('Jake Rosoman')])
   ])
 ]))
+
+var c = 0
+vdom.events.test = function(n){
+  assert(this == vdom)
+  c += n
+}
+
+vdom.emit('test', 1)
+assert(c == 1)
