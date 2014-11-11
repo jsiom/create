@@ -10,6 +10,9 @@ function VirtualNode(tagName, properties, children, events) {
 }
 
 VirtualNode.prototype.type = 'VirtualNode'
+VirtualNode.prototype.properties = emptyMap
+VirtualNode.prototype.children = emptyArray
+VirtualNode.prototype.events = emptyMap
 
 VirtualNode.prototype.emit = function(type) {
   var fn = this.events[type]
