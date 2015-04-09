@@ -41,6 +41,7 @@ function toVDOM(tree){
     }
     var children = children.reduce(addChild, [])
     return new Node(tagName, props, children, events)
+  case 'element': return tree // a real DOM node
   default: throw new Error('can\'t create virtual dom from "' + type(tree) + '"')
   }
 }
