@@ -28,12 +28,14 @@ function toVDOM(tree){
         if (typeof value == 'function' && /^on\w+$/.test(key)) {
           var events = events || {}
           events[key.substring(2).toLowerCase()] = value
-        } else if (key == 'class') {
+        } else if (key == 'class' && typeof value == 'object') {
+          var buffer = props['class']
           for (key in value) if (value[key]) {
-            props.className = props.className
-              ? props.className + ' ' + key
+            buffer = buffer
+              ? buffer + ' ' + key
               : key
           }
+          if (buffer) props['class'] = buffer
         } else {
           props[key] = value
         }
@@ -87,11 +89,9 @@ function parseTag(tag) {
     var part = parts[i]
     switch (part.charAt(0)) {
       case '.':
-        if (props.className) {
-          props.className += ' ' + part.substring(1)
-        } else {
-          props.className = part.substring(1)
-        }
+        props['class'] = props['class']
+          ? props['class'] + ' ' + part.substring(1)
+          : part.substring(1)
         break
       case '#':
         props.id = part.substring(1)
