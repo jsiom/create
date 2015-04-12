@@ -21,7 +21,9 @@ function toVDOM(tree){
     var tagName = head[0]
     var props = head[1]
     var children = tree.slice(1)
-    if (type(children[0]) == 'object') {
+    if (type(children[0]) == 'object'
+     && children[0].type != 'VirtualNode'
+     && children[0].type != 'VirtualText') {
       var properties = children.shift()
       for (var key in properties) {
         var value = properties[key]
